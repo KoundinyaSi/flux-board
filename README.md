@@ -1,6 +1,6 @@
 # FluxBoard - Workflow Automation Builder
 
-FluxBoard is a **visual workflow automation tool** that allows users to **create, visualize, and manage workflows** using an interactive **drag-and-drop interface**. Built with **Next.js**, **React Flow**, and **Zustand**, it enables seamless task execution, decision-making, and automation.
+FluxBoard is a **visual workflow automation tool** that allows users to **create, visualize, and manage workflows** using an interactive **drag-and-drop interface**. Built with **Next.js**, **React Flow**, and **Zustand**, it enables seamless task execution, decision-making, and automation. You can try it out live at [https://flux-board.vercel.app/](https://flux-board.vercel.app/).
 
 ## 🚀 Features
 
@@ -26,8 +26,8 @@ Ensure you have the following installed:
 1. **Clone the Repository**:
 
    ```sh
-   git clone https://github.com/YOUR_USERNAME/fluxboard.git
-   cd fluxboard
+   git clone https://github.com/KoundinyaSi/flux-board.git
+   cd flux-board
 
    ```
 

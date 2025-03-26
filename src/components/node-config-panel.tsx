@@ -25,7 +25,7 @@ import {
 import { X } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { getNodeSchema } from "~/lib/utils/validation";
-import { toast } from "~/lib/hooks/use-toast";
+import { toast } from "sonner";
 
 interface NodeConfigPanelProps {
   node: {
@@ -57,26 +57,41 @@ export default function NodeConfigPanel({
   }, [node, form]);
 
   function onSubmit(data: any) {
-    const requiredFields = [
-      "name",
-      "assignee",
-      "dueDate",
-      "status",
-      "condition",
-      "recipients",
-      "message",
-      "channel",
-    ];
+    let requiredFields: string[] = [];
+
+    switch (node.type) {
+      case "task":
+        requiredFields = ["name", "assignee", "dueDate", "status"];
+        break;
+      case "condition":
+        requiredFields = ["name", "condition"];
+        break;
+      case "notification":
+        requiredFields = ["name", "recipients", "message", "channel"];
+        break;
+      case "calendar":
+        requiredFields = ["name", "date", "time"];
+        break;
+      case "database":
+        requiredFields = ["name", "query"];
+        break;
+      case "document":
+        requiredFields = ["name", "content"];
+        break;
+      case "email":
+        requiredFields = ["name", "recipients", "subject", "body"];
+        break;
+      default:
+        break;
+    }
+
     const missingFields = requiredFields.filter((field) => !data[field]);
 
     if (missingFields.length > 0) {
-      toast({
-        title: "Missing Fields",
-        description: `Please fill in the following fields: ${missingFields.join(
-          ", "
-        )}`,
-        status: "error",
-      });
+      console.log(missingFields);
+      toast.error(
+        `Please fill in the required fields: ${missingFields.join(", ")}`
+      );
       return;
     }
 
@@ -97,11 +112,14 @@ export default function NodeConfigPanel({
           {node.type === "task" && <TaskNodeForm form={form} />}
           {node.type === "condition" && <ConditionNodeForm form={form} />}
           {node.type === "notification" && <NotificationNodeForm form={form} />}
+          {node.type === "database" && <DatabaseNodeForm form={form} />}
+          {node.type === "document" && <DocumentNodeForm form={form} />}
+          {node.type === "email" && <EmailNodeForm form={form} />}
 
           <Button
             type="submit"
             variant={"secondary"}
-            className="w-full bg-black text-white"
+            className="w-full bg-black text-white z-3"
           >
             Save Changes
           </Button>
@@ -190,7 +208,7 @@ function TaskNodeForm({ form }: { form: UseFormReturn<any> }) {
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent>
+              <SelectContent className="z-20">
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="inProgress">In Progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
@@ -332,13 +350,197 @@ function NotificationNodeForm({ form }: { form: UseFormReturn<any> }) {
                   <SelectValue placeholder="Select channel" />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent>
+              <SelectContent className="z-20">
                 <SelectItem value="email">Email</SelectItem>
                 <SelectItem value="sms">SMS</SelectItem>
                 <SelectItem value="push">Push Notification</SelectItem>
                 <SelectItem value="slack">Slack</SelectItem>
               </SelectContent>
             </Select>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+    </>
+  );
+}
+function DatabaseNodeForm({ form }: { form: UseFormReturn<any> }) {
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="name"
+        rules={{ required: "Database Name is required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Database Name *</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter database name" {...field} />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="query"
+        rules={{ required: "Query is required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Query *</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Enter database query"
+                className="resize-none"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Enter query description"
+                className="resize-none"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+    </>
+  );
+}
+
+function DocumentNodeForm({ form }: { form: UseFormReturn<any> }) {
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="name"
+        rules={{ required: "Document Name is required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Document Name *</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter document name" {...field} />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="content"
+        rules={{ required: "Content is required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Content *</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Enter document content"
+                className="resize-none"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Enter document description"
+                className="resize-none"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+    </>
+  );
+}
+
+function EmailNodeForm({ form }: { form: UseFormReturn<any> }) {
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="name"
+        rules={{ required: "Email Name is required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Email Name *</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter email name" {...field} />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="recipients"
+        rules={{ required: "Recipients are required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Recipients *</FormLabel>
+            <FormControl>
+              <Input
+                placeholder="e.g. john@example.com, team@example.com"
+                {...field}
+              />
+            </FormControl>
+            <FormDescription>
+              Comma-separated list of recipients
+            </FormDescription>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="subject"
+        rules={{ required: "Subject is required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Subject *</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter email subject" {...field} />
+            </FormControl>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="body"
+        rules={{ required: "Body is required" }}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <FormLabel>Body *</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Enter email body"
+                className="resize-none"
+                {...field}
+              />
+            </FormControl>
             <FormMessage>{fieldState.error?.message}</FormMessage>
           </FormItem>
         )}

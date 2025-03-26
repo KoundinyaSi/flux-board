@@ -7,10 +7,10 @@ import WorkflowCanvas from "~/components/workflow-canvas";
 import NodeConfigPanel from "~/components/node-config-panel";
 import WorkflowTable from "~/components/workflow-table";
 import { Button } from "~/components/ui/button";
-import { Download, Upload, Undo, Redo, Save, Share2, Play } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import { useWorkflowState } from "~/lib/hooks/use-workflow-state";
 import { exportWorkflow, importWorkflow } from "~/lib/utils/workflow-utils";
-import { toast } from "~/lib/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function WorkflowBuilder() {
   const {
@@ -74,10 +74,7 @@ export default function WorkflowBuilder() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast({
-      title: "Workflow exported",
-      description: "Your workflow has been exported as JSON",
-    });
+    toast.success("Your workflow has been exported as JSON");
   }, [nodes, edges]);
 
   const handleImport = useCallback(() => {
@@ -98,16 +95,9 @@ export default function WorkflowBuilder() {
           );
           setNodes(importedNodes);
           setEdges(importedEdges);
-          toast({
-            title: "Workflow imported",
-            description: "Your workflow has been imported successfully",
-          });
+          toast.info("Your workflow has been imported successfully");
         } catch (error) {
-          toast({
-            title: "Import failed",
-            description: "Failed to import workflow. Invalid format.",
-            variant: "destructive",
-          });
+          toast.error("Failed to import workflow. Invalid format.");
         }
       };
       reader.readAsText(file);

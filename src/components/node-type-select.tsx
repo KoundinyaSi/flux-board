@@ -48,13 +48,6 @@ export function NodeTypeSelect({ onSelect, onCancel }: NodeTypeSelectProps) {
       color: "bg-amber-50 border-amber-200 text-amber-700",
     },
     {
-      type: "calendar",
-      title: "Calendar Event",
-      description: "Schedule events and appointments",
-      icon: <Calendar className="h-5 w-5 text-green-500" />,
-      color: "bg-green-50 border-green-200 text-green-700",
-    },
-    {
       type: "document",
       title: "Document",
       description: "Generate or process documents",

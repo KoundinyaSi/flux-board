@@ -29,7 +29,7 @@ import {
 import { Badge } from "~/components/ui/badge";
 import { Edit, Trash2, Search, ArrowUpDown } from "lucide-react";
 import { InlineEdit } from "~/components/inline-edit";
-import { toast } from "~/lib/hooks/use-toast";
+import { toast } from "sonner";
 
 interface WorkflowTableProps {
   nodes: Array<{
@@ -110,10 +110,7 @@ export default function WorkflowTable({
               value={name}
               onSave={(value) => {
                 onNodeUpdate(nodeId, { ...row.original.data, name: value });
-                toast({
-                  title: "Node updated",
-                  description: "Node name has been updated",
-                });
+                toast.info("Node name has been updated");
               }}
             />
           );
@@ -200,10 +197,7 @@ export default function WorkflowTable({
                 size="icon"
                 onClick={() => {
                   onNodeDelete(node.id);
-                  toast({
-                    title: "Node deleted",
-                    description: "Node has been removed from the workflow",
-                  });
+                  toast.info("Node has been removed from the workflow");
                 }}
                 className="h-8 w-8 text-destructive"
               >

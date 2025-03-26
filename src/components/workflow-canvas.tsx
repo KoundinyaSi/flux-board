@@ -15,13 +15,19 @@ import { NodeTypeSelect } from "~/components/node-type-select";
 import TaskNode from "~/components/nodes/task-node";
 import ConditionNode from "~/components/nodes/condition-node";
 import NotificationNode from "~/components/nodes/notification-node";
-import { toast } from "~/lib/hooks/use-toast";
+import documentNode from "./nodes/document-node";
+import EmailNode from "./nodes/email-node";
+import { toast } from "sonner";
+import databaseNode from "./nodes/database-node";
 
 // Register custom node types
 const nodeTypes = {
   task: TaskNode,
   condition: ConditionNode,
   notification: NotificationNode,
+  document: documentNode,
+  email: EmailNode,
+  database: databaseNode,
 };
 
 interface WorkflowCanvasProps {
@@ -69,10 +75,7 @@ export default function WorkflowCanvas({
 
       addNode(newNode);
       setIsAddingNode(false);
-      toast({
-        title: "Node added",
-        description: `Added a new ${type} node to the workflow`,
-      });
+      toast.success(`Added a new ${type} node to the workflow`);
     },
     [reactFlowInstance, addNode, nodes, edges]
   );
@@ -86,10 +89,9 @@ export default function WorkflowCanvas({
         if (selectedNodes.length > 0 || selectedEdges.length > 0) {
           selectedNodes.forEach((node) => deleteNode(node.id));
           selectedEdges.forEach((edge) => deleteEdge(edge.id));
-          toast({
-            title: "Elements deleted",
-            description: `Deleted ${selectedNodes.length} nodes and ${selectedEdges.length} edges`,
-          });
+          toast.success(
+            `Deleted ${selectedNodes.length} nodes and ${selectedEdges.length} edges`
+          );
         }
       }
     },
@@ -189,6 +191,29 @@ function getDefaultNodeData(type: any) {
         recipients: "",
         message: "",
         channel: "email",
+      };
+    case "document":
+      return {
+        name: "New Document",
+        content: "",
+        author: "",
+        lastModified: new Date().toISOString(),
+      };
+    case "database":
+      return {
+        name: "New Database",
+        host: "",
+        port: 5432,
+        username: "",
+        password: "",
+      };
+    case "email":
+      return {
+        name: "New Email",
+        to: "",
+        subject: "",
+        body: "",
+        sent: false,
       };
     default:
       return { name: "New Node" };

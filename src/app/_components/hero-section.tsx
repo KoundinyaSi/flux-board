@@ -56,7 +56,10 @@ export default function HeroSection() {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
               onClick={() => {
-                console.log("Get Started");
+                window.scrollTo({
+                  top: document.body.scrollHeight,
+                  behavior: "smooth",
+                });
               }}
             >
               {/* <Link href="/app"> */}

@@ -1,7 +1,8 @@
 // import WorkflowDemo from "~/components/workflow-demo";import Link from "next/link";
-import { Button } from "~/components/button";
+import { Button } from "~/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import HeroSection from "./_components/hero-section";
+import WorkflowBuilder from "~/components/workflow-builder";
 
 export default function Home() {
   return (
@@ -36,6 +37,12 @@ export default function Home() {
 
       <div className="pt-16">
         <HeroSection />
+      </div>
+      <div className="relative z-10">
+        <header className="border-b p-4 bg-background">
+          <h1 className="text-2xl font-bold">Workflow Automation Builder</h1>
+        </header>
+        <WorkflowBuilder />
       </div>
     </main>
   );

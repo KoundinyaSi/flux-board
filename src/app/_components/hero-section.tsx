@@ -1,19 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, Users, Workflow, Boxes } from "lucide-react";
-import { Button } from "~/components/button";
+import { ArrowRight } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import WorkflowBuilder from "~/components/workflow-builder";
 
 export default function HeroSection() {
   const [isHovered, setIsHovered] = useState(false);
+
+  const canvasRef = useRef(null);
+
   return (
     <div className="relative overflow-hidden bg-background pb-16">
       {/* Gradient overlay */}
       {/* <div className="bg-gradient-to-b from-cyan-500 to-blue-500" /> */}
 
-      <div className="bg-black p-10">
+      <div className="bg-[#312E2D] p-10">
         <div className="mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -51,24 +55,23 @@ export default function HeroSection() {
               className="bg-white font-semibold"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              asChild
+              onClick={() => {
+                console.log("Get Started");
+              }}
             >
-              <Link href="/app">
-                Get Started
-                <motion.span
-                  animate={{ x: isHovered ? 5 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="ml-2"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.span>
-              </Link>
+              {/* <Link href="/app"> */}
+              Get Started
+              <motion.span
+                animate={{ x: isHovered ? 5 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="ml-2"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </motion.span>
+              {/* </Link> */}
             </Button>
           </motion.div>
         </div>
-        {/* Decorative elements */}
-        <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-blue-500/10 blur-3xl" />
       </div>
     </div>
   );
